@@ -4,5 +4,31 @@
 
 .bars {
   display: flex;
+  margin-top: 15px;
+  padding: 10px 0px;
+  padding-left: 50px;
+  width: 100%;
+  background-color: cadetblue;
   gap: 100px;
+}
+
+.main {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.button {
+  outline: none;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: darkorange;
+  color: white;
+  font-weight: 500;
+}
+
+.filter {
+   width: 20%; 
+   flex-direction: column;
 }
