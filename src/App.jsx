@@ -4,13 +4,15 @@ import axios from "axios";
 function App() {
   const [value, setValues] = useState([]);
   const [topn, settopn] = useState(10);
+  const [offset, setoffset] = useState(0);
+  const [type, settype] = useState("");
 
   const token =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiYXVkIjoiaHR0cDovLzIwLjI0NC41Ni4xNDQvZXZhbHVhdGlvbi1zZXJ2aWNlIiwiZW1haWwiOiJzaXZhYmFsYW4uY3MyM0BiaXRzYXRoeS5hYy5pbiIsImV4cCI6MTc3ODIzNDQ4MCwiaWF0IjoxNzc4MjMzNTgwLCJpc3MiOiJBZmZvcmQgTWVkaWNhbCBUZWNobm9sb2dpZXMgUHJpdmF0ZSBMaW1pdGVkIiwianRpIjoiNjZhM2I5NTUtZjcwMC00M2NkLWJmYWEtNzE4NmU4ZDczYmI5IiwibG9jYWxlIjoiZW4tSU4iLCJuYW1lIjoic2l2YWJhbGFuIHAiLCJzdWIiOiI1MTRhOTU0My1lNGViLTRiY2YtYmIzMy00NWYwOWQ2ZWE1ZmQifSwiZW1haWwiOiJzaXZhYmFsYW4uY3MyM0BiaXRzYXRoeS5hYy5pbiIsIm5hbWUiOiJzaXZhYmFsYW4gcCIsInJvbGxObyI6IjczNzYyMzFjczMxMCIsImFjY2Vzc0NvZGUiOiJ1S2FKZm0iLCJjbGllbnRJRCI6IjUxNGE5NTQzLWU0ZWItNGJjZi1iYjMzLTQ1ZjA5ZDZlYTVmZCIsImNsaWVudFNlY3JldCI6IkpicG1HVnVKaENqTnZiUUcifQ.UepwX7CvWXKBJTwbzcc87qorDjvFUp6j9KgwGDIYdE4";
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJNYXBDbGFpbXMiOnsiYXVkIjoiaHR0cDovLzIwLjI0NC41Ni4xNDQvZXZhbHVhdGlvbi1zZXJ2aWNlIiwiZW1haWwiOiJzaXZhYmFsYW4uY3MyM0BiaXRzYXRoeS5hYy5pbiIsImV4cCI6MTc3ODIzNTY1NiwiaWF0IjoxNzc4MjM0NzU2LCJpc3MiOiJBZmZvcmQgTWVkaWNhbCBUZWNobm9sb2dpZXMgUHJpdmF0ZSBMaW1pdGVkIiwianRpIjoiMDI2OGVhYTEtOTY5YS00MDc1LTgwMTQtMWU2OWJiNWNjMjQxIiwibG9jYWxlIjoiZW4tSU4iLCJuYW1lIjoic2l2YWJhbGFuIHAiLCJzdWIiOiI1MTRhOTU0My1lNGViLTRiY2YtYmIzMy00NWYwOWQ2ZWE1ZmQifSwiZW1haWwiOiJzaXZhYmFsYW4uY3MyM0BiaXRzYXRoeS5hYy5pbiIsIm5hbWUiOiJzaXZhYmFsYW4gcCIsInJvbGxObyI6IjczNzYyMzFjczMxMCIsImFjY2Vzc0NvZGUiOiJ1S2FKZm0iLCJjbGllbnRJRCI6IjUxNGE5NTQzLWU0ZWItNGJjZi1iYjMzLTQ1ZjA5ZDZlYTVmZCIsImNsaWVudFNlY3JldCI6IkpicG1HVnVKaENqTnZiUUcifQ.JArCcztsDTRzCNsSoVL2nxpuoQmhZXbMo1Fl2qC2UvU";
   const get = async () => {
     try {
       const res = await axios.get(
-        "http://4.224.186.213/evaluation-service/notifications",
+        `http://4.224.186.213/evaluation-service/notifications?limit=${topn}&page=${offset}&notification_type=${type}`,
         {
           headers: {
             Accept: "application/json",
@@ -37,10 +39,19 @@ function App() {
     setValues(dummyarray.slice(0, topn));
   };
 
+  const changetopn = (e) => {
+    settopn(e.target.value);
+  };
+  const changeoffset = (e) => {
+    setoffset(e.target.value);
+  };
+  const changetype = (e) => {
+    settype(e.target.value);
+  };
 
   useEffect(() => {
     get();
-  }, []);
+  }, [type, offset, topn]);
 
   return (
     <div className="main">
@@ -62,18 +73,33 @@ function App() {
         <button onClick={arrange} className="button">
           Prioritize
         </button>
-        <select
-          name="Slect the N"
-          id="topn"
-          onChange={(e) => settopn(e.target.value)}
-        >
+        <select name="Select the N" id="topn" onChange={(e) => changetopn(e)}>
           <option value="" hidden>
-            Select the TOP
+            Select the TOP N
           </option>
           <option value="5">5</option>
           <option value="10">10 </option>
-          <option value="15">15</option>
-          <option value="20">20</option>
+        </select>
+        <select
+          name="Select the Page"
+          id="page"
+          onChange={(e) => changeoffset(e)}
+        >
+          <option value="" hidden>
+            Select the Page
+          </option>
+          <option value="0">0</option>
+          <option value="1">1 </option>
+          <option value="2">2 </option>
+          <option value="3">3 </option>
+        </select>
+        <select name="Select type" id="type" onChange={(e) => changetype(e)}>
+          <option value="" hidden>
+            Select the type
+          </option>
+          <option value="Event">Event</option>
+          <option value="Result">Result </option>
+          <option value="Placement">Placement</option>
         </select>
       </div>
     </div>

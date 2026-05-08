@@ -30,5 +30,8 @@
 
 .filter {
    width: 20%; 
+   display: flex;
+   gap: 20px;
+   align-items: center;
    flex-direction: column;
 }
